@@ -44,11 +44,19 @@
 <body>
 <canvas id="fireworks"></canvas>
 <div class="hero">
-  <h1>Chúc Mẹ 20-10<br>vui vẻ, hạnh phúc<br>và mãi mãi xinh đẹp! 💐</h1>
+  <h1>Chúc Mẹ 20-10<br>vui vẻ, hạnh phúc<br>và mãi xinh đẹp! 💐</h1>
   <p>— Con thương Mẹ nhiều —</p>
 </div>
-<audio id="bgm" src="music.mp3" preload="auto" loop></audio>
+<audio id="bgm" preload="auto" loop autoplay>
+  <source src="https://cdn.pixabay.com/download/audio/2023/02/28/audio_8c96b9a6c2.mp3?filename=romantic-piano-melody-140929.mp3" type="audio/mpeg">
+</audio>
+
 <script>
+const bgm=document.getElementById("bgm");
+(async()=>{try{await bgm.play();}catch{}})();
+window.addEventListener("pointerdown",()=>bgm.play().catch(()=>{}),{once:true});
+</script>
+
 /* ==== Pháo hoa trái tim rực rỡ (đuôi sáng mềm, lung linh) ==== */
 const canvas=document.getElementById("fireworks"),ctx=canvas.getContext("2d");
 let w,h;
