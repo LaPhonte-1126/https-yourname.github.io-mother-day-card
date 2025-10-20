@@ -1,168 +1,144 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Chúc Mẹ 20-10 💖</title>
-<style>
-  html, body {
-    margin: 0;
-    padding: 0;
-    height: 100%;
-    overflow: hidden;
-    background: radial-gradient(circle at center, #fff0f5 0%, #ffe4ec 40%, #ffd6e8 80%);
-    font-family: 'Brush Script MT', cursive;
-    text-align: center;
-    color: #e91e63;
-  }
+  <meta charset="UTF-8">
+  <title>Chúc Mẹ 20-10 💖</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      overflow: hidden;
+      background: radial-gradient(circle at top, #ffe6f2, #ffcce6, #ffb3d9);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      font-family: 'Brush Script MT', cursive;
+      color: #ff4da6;
+      text-align: center;
+    }
 
-  h1 {
-    margin-top: 20vh;
-    font-size: 4em;
-    font-weight: bold;
-    animation: glow 3s ease-in-out infinite alternate;
-  }
+    h1 {
+      font-size: 90px;
+      margin-bottom: 20px;
+      text-shadow: 0 0 20px #ff99cc;
+      animation: glow 2s infinite alternate;
+    }
 
-  h2 {
-    font-size: 2.5em;
-    margin-top: 0.5em;
-  }
+    h2 {
+      font-size: 60px;
+      text-shadow: 0 0 15px #ff66b2;
+      margin-bottom: 30px;
+      animation: glow2 3s infinite alternate;
+    }
 
-  h3 {
-    font-size: 2em;
-    color: #f06292;
-    margin-top: 0.3em;
-  }
+    p {
+      font-size: 30px;
+      color: #ff66b2;
+      font-family: "Segoe Script", cursive;
+    }
 
-  @keyframes glow {
-    from { text-shadow: 0 0 10px #fff, 0 0 30px #ff80ab, 0 0 60px #f06292; }
-    to { text-shadow: 0 0 20px #fff, 0 0 40px #ec407a, 0 0 80px #e91e63; }
-  }
+    @keyframes glow {
+      from { text-shadow: 0 0 20px #ff66b2; }
+      to { text-shadow: 0 0 40px #ff3399; }
+    }
 
-  .footer {
-    position: absolute;
-    bottom: 8vh;
-    width: 100%;
-    font-size: 1.5em;
-    color: #f48fb1;
-  }
+    @keyframes glow2 {
+      from { text-shadow: 0 0 10px #ff99cc; }
+      to { text-shadow: 0 0 30px #ff4da6; }
+    }
 
-  canvas {
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: -1;
-  }
-</style>
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+    }
+  </style>
 </head>
 <body>
   <canvas id="fireworks"></canvas>
+  <h1>Chúc Mẹ 20-10</h1>
+  <h2>vui vẻ, hạnh phúc<br>và mãi xinh đẹp 🌸</h2>
+  <p>— Con thương Mẹ nhiều 💖 —</p>
 
-  <h1>💖 Chúc Mẹ 20-10 💖</h1>
-  <h2>vui vẻ, hạnh phúc</h2>
-  <h3>và mãi xinh đẹp! 💐</h3>
-  <div class="footer">— Con thương Mẹ nhiều —</div>
+  <script>
+    // Hiệu ứng pháo hoa hình trái tim 💥
+    const canvas = document.getElementById("fireworks");
+    const ctx = canvas.getContext("2d");
+    let w = window.innerWidth;
+    let h = window.innerHeight;
+    canvas.width = w;
+    canvas.height = h;
 
-  <!-- Nhạc nền -->
-  <audio id="bgm" preload="auto" loop>
-    <source src="https://cdn.pixabay.com/download/audio/2023/02/28/audio_8c96b9a6c2.mp3?filename=romantic-piano-melody-140929.mp3" type="audio/mpeg">
-  </audio>
+    window.addEventListener("resize", () => {
+      w = window.innerWidth;
+      h = window.innerHeight;
+      canvas.width = w;
+      canvas.height = h;
+    });
 
-<script>
-// === Canvas pháo hoa trái tim ===
-const canvas = document.getElementById('fireworks');
-const ctx = canvas.getContext('2d');
-let W, H;
+    class Particle {
+      constructor(x, y, color, vx, vy) {
+        this.x = x;
+        this.y = y;
+        this.vx = vx;
+        this.vy = vy;
+        this.life = 1;
+        this.color = color;
+      }
+      update() {
+        this.x += this.vx;
+        this.y += this.vy;
+        this.vy += 0.02;
+        this.life -= 0.01;
+      }
+      draw() {
+        ctx.globalAlpha = this.life;
+        ctx.fillStyle = this.color;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, 3, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
 
-function resize() {
-  W = canvas.width = window.innerWidth;
-  H = canvas.height = window.innerHeight;
-}
-resize();
-window.addEventListener('resize', resize);
+    const particles = [];
+    function heartShape(t) {
+      const x = 16 * Math.sin(t) ** 3;
+      const y = - (13 * Math.cos(t) - 5 * Math.cos(2*t) - 2 * Math.cos(3*t) - Math.cos(4*t));
+      return [x, y];
+    }
 
-function heartShape(t) {
-  const x = 16 * Math.pow(Math.sin(t), 3);
-  const y = -(13 * Math.cos(t) - 5 * Math.cos(2*t) - 2 * Math.cos(3*t) - Math.cos(4*t));
-  return [x, y];
-}
+    function createFirework() {
+      const color = `hsl(${Math.random() * 360},100%,70%)`;
+      const x = Math.random() * w;
+      const y = Math.random() * h / 2;
+      for (let i = 0; i < 50; i++) {
+        const t = (Math.PI * 2 / 50) * i;
+        const [hx, hy] = heartShape(t);
+        const vx = hx * 0.8;
+        const vy = hy * 0.8;
+        particles.push(new Particle(x, y, color, vx, vy));
+      }
+    }
 
-class Particle {
-  constructor(x, y, color) {
-    this.x = x;
-    this.y = y;
-    this.vx = (Math.random() - 0.5) * 2;
-    this.vy = (Math.random() - 0.5) * 2;
-    this.alpha = 1;
-    this.size = Math.random() * 3 + 2;
-    this.color = color;
-  }
-  draw() {
-    ctx.globalAlpha = this.alpha;
-    ctx.fillStyle = this.color;
-    ctx.beginPath();
-    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-    ctx.fill();
-  }
-  update() {
-    this.x += this.vx;
-    this.y += this.vy;
-    this.alpha -= 0.01;
-  }
-}
+    function animate() {
+      ctx.fillStyle = "rgba(255,240,245,0.2)";
+      ctx.fillRect(0, 0, w, h);
+      for (let i = particles.length - 1; i >= 0; i--) {
+        const p = particles[i];
+        p.update();
+        p.draw();
+        if (p.life <= 0) particles.splice(i, 1);
+      }
+      requestAnimationFrame(animate);
+    }
 
-let particles = [];
-
-function createHeartFirework() {
-  const cx = Math.random() * W;
-  const cy = Math.random() * H * 0.4 + H * 0.2;
-  const color = `hsl(${Math.random() * 360}, 100%, 70%)`;
-
-  // Tạo hiệu ứng nổ trung tâm sáng mạnh
-  for (let i = 0; i < 30; i++) {
-    const angle = Math.random() * 2 * Math.PI;
-    const speed = Math.random() * 4 + 1;
-    const px = cx + Math.cos(angle) * 5;
-    const py = cy + Math.sin(angle) * 5;
-    const p = new Particle(px, py, "#fff");
-    p.vx = Math.cos(angle) * speed;
-    p.vy = Math.sin(angle) * speed;
-    particles.push(p);
-  }
-
-  // Pháo hoa tim
-  for (let t = 0; t < Math.PI * 2; t += 0.08) {
-    const [hx, hy] = heartShape(t);
-    const scale = 25 + Math.random() * 10;
-    const px = cx + hx * scale;
-    const py = cy + hy * scale;
-    particles.push(new Particle(px, py, color));
-  }
-}
-
-function animate() {
-  ctx.fillStyle = 'rgba(255, 240, 245, 0.25)';
-  ctx.fillRect(0, 0, W, H);
-  particles.forEach((p, i) => {
-    p.update();
-    p.draw();
-    if (p.alpha <= 0) particles.splice(i, 1);
-  });
-  requestAnimationFrame(animate);
-}
-
-setInterval(createHeartFirework, 1000);
-animate();
-
-// === Nhạc nền ===
-const bgm = document.getElementById("bgm");
-(async()=>{
-  try{
-    await bgm.play();
-  }catch{
-    window.addEventListener("pointerdown",()=>bgm.play(),{once:true});
-  }
-})();
-</script>
+    setInterval(createFirework, 1500);
+    animate();
+  </script>
 </body>
 </html>
