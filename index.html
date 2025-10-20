@@ -12,27 +12,31 @@
   html,body{height:100%;overflow:hidden}
   body{
     font-family:'Inter',sans-serif;
-    background: radial-gradient(circle at 30% 30%, #ffe6f0, #ffd9ec 40%, #fff1f7 80%);
+    background: linear-gradient(135deg, #fff8fb 0%, #ffe6f2 25%, #ffd6eb 55%, #ffe6f2 80%, #fff0f7 100%);
     background-attachment:fixed;
     color:#ff2e83;
   }
-  canvas{position:fixed;inset:0;width:100%;height:100%}
+  canvas{
+    position:fixed;inset:0;
+    width:100%;height:100%;
+    z-index:1;
+  }
   .hero{
     position:fixed;inset:0;
     display:flex;flex-direction:column;
     align-items:center;justify-content:center;
     text-align:center;
-    text-shadow:0 0 15px rgba(255,130,180,0.5);
+    text-shadow:0 0 25px rgba(255,130,180,0.5);
     z-index:5;
   }
   h1{
     font-family:'Great Vibes',cursive;
     font-size:clamp(40px,8vw,100px);
-    color:#ff2e83;
+    color:#ff4fa0;
   }
   p{
     font-size:clamp(16px,2vw,26px);
-    color:#ff4f94;
+    color:#ff6fb5;
     margin-top:10px;
   }
 </style>
@@ -45,16 +49,22 @@
 </div>
 <audio id="bgm" src="music.mp3" preload="auto" loop></audio>
 <script>
-/* ==== Pháo hoa trái tim rực rỡ (có đuôi sáng) ==== */
+/* ==== Pháo hoa trái tim rực rỡ (đuôi sáng mềm, lung linh) ==== */
 const canvas=document.getElementById("fireworks"),ctx=canvas.getContext("2d");
-let w,h;function resize(){w=canvas.width=innerWidth*devicePixelRatio;h=canvas.height=innerHeight*devicePixelRatio;ctx.scale(devicePixelRatio,devicePixelRatio)}
-resize();addEventListener("resize",resize);
+let w,h;
+function resize(){
+  w=canvas.width=innerWidth*devicePixelRatio;
+  h=canvas.height=innerHeight*devicePixelRatio;
+  ctx.scale(devicePixelRatio,devicePixelRatio);
+}
+resize();
+addEventListener("resize",resize);
 
 class Particle{
   constructor(x,y,vx,vy,color,size){
     this.x=x;this.y=y;this.vx=vx;this.vy=vy;
     this.color=color;this.life=1;this.size=size;
-    this.trail=[];this.maxTrail=8;
+    this.trail=[];this.maxTrail=10;
   }
   update(dt){
     this.trail.push({x:this.x,y:this.y,life:this.life});
@@ -65,13 +75,14 @@ class Particle{
   }
   draw(ctx){
     const grad=ctx.createRadialGradient(this.x,this.y,0,this.x,this.y,this.size*3);
-    grad.addColorStop(0,this.color);grad.addColorStop(1,"transparent");
+    grad.addColorStop(0,this.color);
+    grad.addColorStop(1,"transparent");
     ctx.fillStyle=grad;
     ctx.beginPath();ctx.arc(this.x,this.y,this.size,0,2*Math.PI);ctx.fill();
-    // đuôi sáng
+    // Đuôi sáng nhẹ
     for(let i=0;i<this.trail.length;i++){
       const t=this.trail[i];
-      ctx.globalAlpha=t.life*this.life*0.5;
+      ctx.globalAlpha=t.life*this.life*0.4;
       ctx.fillStyle=this.color;
       ctx.fillRect(t.x-1,t.y-1,2,2);
     }
@@ -87,12 +98,12 @@ function heartShape(t){
 
 let particles=[];
 let last=performance.now(),timer=0;
-const colors=["#ff4081","#ff99cc","#ff66b3","#ff80bf","#fff"];
+const colors=["#ff4081","#ff99cc","#ff66b3","#ffcce6","#fff"];
 function spawnHeart(){
   const cx=Math.random()*innerWidth*0.8+innerWidth*0.1;
   const cy=Math.random()*innerHeight*0.4+innerHeight*0.2;
   const color=colors[Math.floor(Math.random()*colors.length)];
-  const n=300,spd=400+Math.random()*200;
+  const n=320,spd=420+Math.random()*180;
   for(let i=0;i<n;i++){
     const t=(i/n)*Math.PI*2;
     const p=heartShape(t);
@@ -104,11 +115,11 @@ function spawnHeart(){
 function animate(now){
   const dt=(now-last)/1000;last=now;
   ctx.globalCompositeOperation="destination-out";
-  ctx.fillStyle="rgba(255,240,245,0.25)";
+  ctx.fillStyle="rgba(255,250,255,0.3)";
   ctx.fillRect(0,0,innerWidth,innerHeight);
   ctx.globalCompositeOperation="lighter";
   timer-=dt;
-  if(timer<=0){spawnHeart();timer=1.2;}
+  if(timer<=0){spawnHeart();timer=1.3;}
   for(let i=particles.length-1;i>=0;i--){
     const p=particles[i];
     p.update(dt);
@@ -119,7 +130,7 @@ function animate(now){
 }
 requestAnimationFrame(animate);
 
-/* ===== Nhạc: auto play hoặc khi chạm ===== */
+/* ===== Nhạc: auto play hoặc chạm ===== */
 const bgm=document.getElementById("bgm");
 (async()=>{try{await bgm.play();}catch{}})();
 window.addEventListener("pointerdown",()=>bgm.play().catch(()=>{}),{once:true});
