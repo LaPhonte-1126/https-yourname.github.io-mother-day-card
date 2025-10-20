@@ -1,191 +1,133 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="vi">
 <head>
-<meta charset="UTF-8" />
+<meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>💖 Thiệp 20/10 tặng Mẹ 💖</title>
+<title>Chúc Mẹ 20–10 ♥</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Inter:wght@300;600&display=swap" rel="stylesheet">
 <style>
-  :root{ --pink:#d81b60; --bg1:#fff; --bg2:#ffe6f2; }
-  html,body{height:100%;margin:0;overflow:hidden;font-family:system-ui,-apple-system,"Segoe UI",Roboto}
-  body{background:radial-gradient(circle at 50% 100%,var(--bg2),var(--bg1))}
-  canvas{position:fixed;inset:0;display:block}
-
-  /* nội dung */
-  .container{position:relative;z-index:10;text-align:center;padding:clamp(40px,8vh,100px) 16px 0;color:var(--pink)}
-  h1{font-size:clamp(28px,6vw,52px);margin:.2em 0;animation:glow 2s ease-in-out infinite alternate}
-  p{font-size:clamp(16px,3.6vw,22px);color:#333;margin:.35em 0}
-  @keyframes glow{from{text-shadow:0 0 8px #ff9acb} to{ text-shadow:0 0 22px #ff2d7a}}
-
-  /* tim bay */
-  .heart{position:fixed;bottom:-40px;left:50%;translate:-50% 0;pointer-events:none;z-index:9;
-         color:#ff66b2;font-size:20px;animation:floatUp 6s linear forwards}
-  @keyframes floatUp{0%{transform:translateY(0) scale(1);opacity:1}100%{transform:translateY(-110vh) scale(.4);opacity:0}}
-
-  /* cánh hoa rơi */
-  .petal{position:fixed;top:-10vh;left:0;pointer-events:none;z-index:8;width:18px;height:18px;
-         background:radial-gradient(circle at 30% 30%,#fff0 8px,#ffb6d1 9px,#ff7fb1 70%,#ff4f99);
-         border-radius:50% 50% 50% 0;transform:rotate(45deg);opacity:.9;
-         animation:fall var(--dur) linear forwards, sway 3s ease-in-out infinite}
-  @keyframes fall{to{transform:translateY(115vh) rotate(405deg)}}
-  @keyframes sway{50%{translate:10px 0}}
-
-  /* audio & controls */
-  .controls{position:fixed;left:50%;bottom:14px;translate:-50% 0;z-index:15;display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:center}
-  .btn{background:var(--pink);color:#fff;border:0;border-radius:999px;padding:9px 16px;font-size:14px;cursor:pointer;box-shadow:0 6px 14px #d81b6033}
-
-  /* QR khung trái tim */
-  .qr-wrap{position:fixed;right:16px;bottom:80px;z-index:12;display:flex;flex-direction:column;align-items:center;gap:8px}
-  .heart-frame{
-    position:relative; width:220px; height:200px;
-    filter: drop-shadow(0 8px 18px #d81b6040);
+  :root{--bg1:#0f0c29;--bg2:#302b63;--bg3:#24243e;--accent:#ff6fb5;--txt:#fff}
+  *{box-sizing:border-box} html,body{height:100%;margin:0;overflow:hidden}
+  body{
+    font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--txt);
+    background: radial-gradient(1200px 800px at 70% 20%, rgba(255,255,255,.08), transparent 55%),
+                linear-gradient(135deg,var(--bg1),var(--bg2) 55%,var(--bg3));
   }
-  /* tạo hình trái tim bằng CSS */
-  .heart-shape{
-    position:absolute; inset:0; transform:translateY(-14px);
+  canvas{position:fixed;inset:0;width:100%;height:100%}
+  .hero{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:24px;pointer-events:none}
+  .title{
+    font-family:"Great Vibes",cursive;font-size:clamp(34px,8.5vw,92px);line-height:1.06;margin:0 0 6px;color:#fff;
+    text-shadow:0 10px 26px rgba(255,110,170,.45)
   }
-  .heart-shape:before, .heart-shape:after{
-    content:""; position:absolute; width:120px; height:190px; border-radius:120px 120px 0 120px;
-    background:linear-gradient(145deg,#ff8bbd,#ff2d7a);
-  }
-  .heart-shape:before{left:42px; transform:rotate(-45deg); transform-origin:bottom right;}
-  .heart-shape:after {left:58px; transform:rotate(45deg);  transform-origin:bottom left;}
-
-  .qr-box{
-    position:absolute; left:50%; top:52%;
-    width:150px; height:150px; translate:-50% -50%;
-    background:#fff; padding:10px; border-radius:16px;
-    display:grid; place-items:center;
-  }
-  .qr-box img{width:100%;height:100%;object-fit:contain}
-  .caption{font-size:12px;color:#555}
+  .subtitle{font-size:clamp(14px,2.6vw,22px);opacity:.92;margin:0}
+  .float-hearts{position:fixed;inset:0;pointer-events:none;overflow:hidden}
+  .h{position:absolute;width:14px;height:14px;transform:rotate(45deg);opacity:.35;filter:blur(.2px)}
+  .h:before,.h:after{content:"";position:absolute;width:14px;height:14px;background:var(--accent);border-radius:50%}
+  .h:before{left:-7px}.h:after{top:-7px}
 </style>
 </head>
 <body>
 <canvas id="fw"></canvas>
-
-<div class="container">
-  <h1>🌸 Chúc mừng Ngày 20/10, Mẹ yêu! 🌸</h1>
-  <p>Chúc mẹ 20-10 vui vẻ, hạnh phúc và mãi mãi xinh đẹp.</p>
-  <p><em>Con yêu mẹ rất nhiều 💕</em></p>
-</div>
-
-<!-- QR khung trái tim: tự động mã hóa đúng URL trang hiện tại -->
-<div class="qr-wrap">
-  <div class="heart-frame" id="qrFrame">
-    <div class="heart-shape" aria-hidden="true"></div>
-    <div class="qr-box"><img id="qrImg" alt="QR code"/></div>
+<div class="hero">
+  <div>
+    <h1 class="title">Chúc mẹ 20-10 vui vẻ, hạnh phúc<br>và mãi mãi xinh đẹp! 💖</h1>
+    <p class="subtitle">— Con thương Mẹ nhiều —</p>
   </div>
-  <button class="btn" id="dlQR">⬇️ Tải mã QR</button>
-  <div class="caption">Quét để mở thiệp</div>
 </div>
+<div class="float-hearts" id="float"></div>
 
-<div class="controls">
-  <audio id="music" preload="auto" loop>
-    <source src="https://www.bensound.com/bensound-music/bensound-romantic.mp3" type="audio/mpeg" />
-  </audio>
-  <button class="btn" id="playBtn">🎵 Bật nhạc</button>
-  <button class="btn" id="boomBtn">🎆 Bắn pháo hoa</button>
-</div>
+<!-- Nhạc: để file music.mp3 cạnh index.html (hoặc sửa src thành link khác) -->
+<audio id="bgm" preload="auto" src="music.mp3" loop></audio>
 
 <script>
-/* ====== FIT CANVAS ====== */
-const fw = document.getElementById('fw'), fctx = fw.getContext('2d');
-function fit(){ fw.width = innerWidth; fw.height = innerHeight }
-addEventListener('resize', fit, {passive:true}); fit();
-
-/* ====== FIREWORKS ====== */
-let fireworks=[];
-class Firework{
-  constructor(x,y,rgba){this.parts=[];for(let i=0;i<60;i++){this.parts.push({x,y,ang:Math.random()*6.283,spd:Math.random()*4+1.2,alp:1,grav:.03})}this.col=rgba}
-  upd(){this.parts.forEach(p=>{p.x+=Math.cos(p.ang)*p.spd;p.y+=Math.sin(p.ang)*p.spd+p.grav;p.spd*=0.98;p.alp-=0.02});this.parts=this.parts.filter(p=>p.alp>0)}
-  draw(){this.parts.forEach(p=>{fctx.fillStyle=`rgba(${this.col},${p.alp})`;fctx.fillRect(p.x,p.y,2,2)})}
-}
-function boom(x = Math.random()*fw.width, y = Math.random()*fw.height*0.5){
-  const c=`${~~(Math.random()*255)},${~~(80+Math.random()*120)},${~~(150+Math.random()*105)}`;
-  fireworks.push(new Firework(x,y,c));
-}
-setInterval(()=>boom(),750);
-function loop(){
-  fctx.fillStyle='rgba(255,255,255,0.12)'; fctx.fillRect(0,0,fw.width,fw.height);
-  fireworks.forEach(f=>{f.upd();f.draw()}); fireworks=fireworks.filter(f=>f.parts.length);
-  requestAnimationFrame(loop);
-} loop();
-fw.addEventListener('click', e=>boom(e.clientX,e.clientY), {passive:true});
-document.getElementById('boomBtn').onclick=()=>boom(innerWidth*.5,innerHeight*.35);
-
-/* ====== HEARTS & PETALS ====== */
-function heart(){const h=document.createElement('div');h.className='heart';h.textContent='💖';
-  h.style.left=Math.random()*100+'vw';h.style.fontSize=(16+Math.random()*28)+'px';
-  h.style.animationDuration=(4+Math.random()*5)+'s';document.body.appendChild(h);setTimeout(()=>h.remove(),9e3)}
-setInterval(heart,480);
-function petal(){const el=document.createElement('div');el.className='petal';el.style.left=Math.random()*100+'vw';
-  el.style.animationDuration=(4+Math.random()*6)+'s';el.style.setProperty('--dur',(6+Math.random()*8)+'s');
-  document.body.appendChild(el);const life=parseFloat(getComputedStyle(el).getPropertyValue('--dur'))*1000+1000;setTimeout(()=>el.remove(),life)}
-setInterval(petal,260);
-
-/* ====== AUDIO ====== */
-const music=document.getElementById('music'), btn=document.getElementById('playBtn');
-async function tryPlay(){try{await music.play();btn.textContent='⏸️ Tắt nhạc'}catch{btn.textContent='🎵 Bật nhạc'}}
-tryPlay();
-btn.onclick=async()=>{ if(music.paused){await music.play();btn.textContent='⏸️ Tắt nhạc'} else {music.pause();btn.textContent='🎵 Bật nhạc'} };
-
-/* ====== QR KHUNG TRÁI TIM ======
-   Dùng dịch vụ tạo ảnh QR (qrserver.com). Ảnh QR nằm trong hộp vuông,
-   bên ngoài là khung trái tim để vẫn quét tốt. */
-const qrImg = document.getElementById('qrImg');
-function setQR(){
-  const url = location.href; // chính URL trang hiện tại
-  const api = 'https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=' + encodeURIComponent(url);
-  qrImg.crossOrigin = 'anonymous';
-  qrImg.src = api;
-}
-setQR();
-
-/* Tải QR (ghép khung tim + QR thành PNG) */
-document.getElementById('dlQR').onclick = async ()=>{
-  const frame = document.getElementById('qrFrame');
-  // Vẽ lại khung + QR lên canvas để tải
-  const w = 660, h = 600; // tỉ lệ lớn hơn cho sắc nét
-  const c = document.createElement('canvas'); c.width=w; c.height=h; const ctx = c.getContext('2d');
-
-  // nền trong suốt
-  ctx.clearRect(0,0,w,h);
-
-  // vẽ trái tim (hai “lá”)
-  function heartPath(ctx){
-    ctx.save();
-    const grad = ctx.createLinearGradient(0,0,w,h);
-    grad.addColorStop(0,'#ff8bbd'); grad.addColorStop(1,'#ff2d7a');
-    ctx.fillStyle = grad;
-
-    // trái tim kiểu cơ bản
-    ctx.translate(w/2, h/2-40);
-    const r = 170;
-    ctx.beginPath();
-    ctx.moveTo(0, r);
-    ctx.bezierCurveTo(200, r-140,  r, -20,   0, -40);
-    ctx.bezierCurveTo(-r, -20,  -200, r-140,  0, r);
-    ctx.closePath();
-    ctx.fill();
-    ctx.restore();
+/* ===== tiny floating hearts (không nút, tự chạy) ===== */
+(function(){
+  const wrap = document.getElementById('float');
+  const W=()=>innerWidth, H=()=>innerHeight;
+  const COLORS=['#ff6fb5','#ffd166','#68d391','#7aa2ff','#ffc6ff'];
+  function spawn(){
+    const el=document.createElement('div');
+    el.className='h';
+    const size=10+Math.random()*16;
+    el.style.width=el.style.height=size+'px';
+    el.style.left=Math.random()*W()+'px';
+    el.style.bottom='-20px';
+    el.style.opacity=.25+Math.random()*.25;
+    el.style.filter='blur('+(Math.random()*0.8)+'px)';
+    el.style.setProperty('--accent', COLORS[(Math.random()*COLORS.length)|0]);
+    wrap.appendChild(el);
+    const dur=8+Math.random()*10;
+    const drift=(Math.random()<.5?-1:1)*(20+Math.random()*80);
+    el.animate([{transform:'translate(0,0) rotate(45deg)'},{transform:`translate(${drift}px,-${H()+60}px) rotate(45deg)`}],{duration:dur*1000,easing:'linear'})
+      .onfinish=()=>el.remove();
   }
-  heartPath(ctx);
+  setInterval(spawn,600);
+})();
 
-  // vẽ hộp QR trắng
-  const box = {x:w/2-190/2, y:h/2-190/2+10, s:190};
-  ctx.fillStyle = '#fff'; ctx.roundRect ? ctx.roundRect(box.x-16,box.y-16,box.s+32,box.s+32,20) : ctx.fillRect(box.x-16,box.y-16,box.s+32,box.s+32);
-  ctx.fill();
+/* ===== fireworks: big heart-shaped bursts, infinite loop ===== */
+const canvas=document.getElementById('fw'), ctx=canvas.getContext('2d');
+let DPR=Math.max(1,Math.min(2,devicePixelRatio||1));
+function resize(){canvas.width=Math.floor(innerWidth*DPR);canvas.height=Math.floor(innerHeight*DPR)}
+addEventListener('resize',resize,{passive:true}); resize();
 
-  // vẽ ảnh QR lên hộp
-  await qrImg.decode?.().catch(()=>{});
-  ctx.drawImage(qrImg, box.x, box.y, box.s, box.s);
+class Particle{
+  constructor(x,y,vx,vy,color,size){this.x=x;this.y=y;this.vx=vx;this.vy=vy;this.alpha=1;this.life=0;this.color=color;this.size=size}
+  step(dt){this.vy+=220*dt; this.vx*=0.995; this.vy*=0.995; this.x+=this.vx*dt; this.y+=this.vy*dt; this.life+=dt; this.alpha=Math.max(0,1-this.life/2.4)}
+  draw(){ctx.globalAlpha=this.alpha; ctx.fillStyle=this.color; ctx.beginPath(); ctx.arc(this.x,this.y,this.size,0,6.283); ctx.fill()}
+}
+const COLORS=['#ff6fb5','#ffd166','#7aa2ff','#b5f5ec','#fff176','#f78fb3','#c8b6ff'];
+let particles=[];
+let last=performance.now();
+let timer=0;
+const baseInterval=1.0; // nhịp bắn
 
-  // tải
-  const a=document.createElement('a');
-  a.download='QR_2010_me_yeu.png';
-  a.href=c.toDataURL('image/png');
-  a.click();
-};
+function heartPoint(t){
+  const x=16*Math.sin(t)**3;
+  const y=13*Math.cos(t)-5*Math.cos(2*t)-2*Math.cos(3*t)-Math.cos(4*t);
+  return {x:x/18,y:-y/18}; // chuẩn hoá, đảo trục y cho màn hình
+}
+function spawnHeart(){
+  const w=canvas.width,h=canvas.height;
+  const cx=(0.2+Math.random()*0.6)*w;
+  const cy=(0.28+Math.random()*0.38)*h;
+  const color=COLORS[(Math.random()*COLORS.length)|0];
+  const N=260; // nhiều hạt -> trái tim to, dày
+  const speed=500+Math.random()*160;
+  const size=2.5+Math.random()*1.6;
+  for(let i=0;i<N;i++){
+    const t=(i/N)*Math.PI*2;
+    const p=heartPoint(t);
+    const jitter=0.85+Math.random()*0.35;
+    const vx=p.x*speed*jitter, vy=p.y*speed*jitter;
+    particles.push(new Particle(cx,cy,vx,vy,color,size));
+  }
+  particles.push(new Particle(cx,cy,0,0,'#ffffff',8)); // flash lõi
+}
+function loop(now){
+  const dt=(now-last)/1000; last=now;
+  ctx.globalCompositeOperation='destination-out';
+  ctx.fillStyle=`rgba(0,0,0,${Math.min(1,dt*1.3)})`;
+  ctx.fillRect(0,0,canvas.width,canvas.height);
+  ctx.globalCompositeOperation='lighter';
+
+  timer-=dt; if(timer<=0){ spawnHeart(); timer=baseInterval; }
+
+  for(let i=particles.length-1;i>=0;i--){
+    const p=particles[i]; p.step(dt);
+    if(p.alpha<=0) particles.splice(i,1); else p.draw();
+  }
+  requestAnimationFrame(loop);
+}
+requestAnimationFrame(loop);
+
+/* ===== audio: không nút; tự phát nếu được, nếu không thì bật khi người dùng chạm lần đầu ===== */
+const audio=document.getElementById('bgm');
+(async()=>{ try{ await audio.play(); }catch{ /* chờ user tương tác */ } })();
+function kickAudio(){ audio.play().catch(()=>{}); window.removeEventListener('pointerdown',kickAudio); window.removeEventListener('keydown',kickAudio) }
+window.addEventListener('pointerdown',kickAudio,{once:true,passive:true});
+window.addEventListener('keydown',kickAudio,{once:true});
 </script>
 </body>
 </html>
