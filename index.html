@@ -1,134 +1,126 @@
-
 <!doctype html>
 <html lang="vi">
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Chúc Mẹ 20–10 ♥</title>
+<title>Chúc Mẹ 20-10 💖</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Inter:wght@300;600&display=swap" rel="stylesheet">
 <style>
-  :root{--bg1:#0f0c29;--bg2:#302b63;--bg3:#24243e;--accent:#ff6fb5;--txt:#fff}
-  *{box-sizing:border-box} html,body{height:100%;margin:0;overflow:hidden}
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%;overflow:hidden}
   body{
-    font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--txt);
-    background: radial-gradient(1200px 800px at 70% 20%, rgba(255,255,255,.08), transparent 55%),
-                linear-gradient(135deg,var(--bg1),var(--bg2) 55%,var(--bg3));
+    font-family:'Inter',sans-serif;
+    background: radial-gradient(circle at 20% 20%, #ffb3ec, #ff9fda 25%, #b28bff 60%, #2e005e 100%);
+    background-attachment:fixed;
+    color:white;
   }
   canvas{position:fixed;inset:0;width:100%;height:100%}
-  .hero{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:24px;pointer-events:none}
-  .title{
-    font-family:"Great Vibes",cursive;font-size:clamp(34px,8.5vw,92px);line-height:1.06;margin:0 0 6px;color:#fff;
-    text-shadow:0 10px 26px rgba(255,110,170,.45)
+  .hero{
+    position:fixed;inset:0;
+    display:flex;flex-direction:column;
+    align-items:center;justify-content:center;
+    text-align:center;
+    text-shadow:0 0 20px rgba(255,255,255,0.8);
+    z-index:5;
   }
-  .subtitle{font-size:clamp(14px,2.6vw,22px);opacity:.92;margin:0}
-  .float-hearts{position:fixed;inset:0;pointer-events:none;overflow:hidden}
-  .h{position:absolute;width:14px;height:14px;transform:rotate(45deg);opacity:.35;filter:blur(.2px)}
-  .h:before,.h:after{content:"";position:absolute;width:14px;height:14px;background:var(--accent);border-radius:50%}
-  .h:before{left:-7px}.h:after{top:-7px}
+  h1{
+    font-family:'Great Vibes',cursive;
+    font-size:clamp(40px,8vw,100px);
+    color:#fff;
+  }
+  p{
+    font-size:clamp(16px,2vw,26px);
+    margin-top:10px;
+  }
 </style>
 </head>
 <body>
-<canvas id="fw"></canvas>
+<canvas id="fireworks"></canvas>
 <div class="hero">
-  <div>
-    <h1 class="title">Chúc mẹ 20-10 vui vẻ, hạnh phúc<br>và mãi mãi xinh đẹp! 💖</h1>
-    <p class="subtitle">— Con thương Mẹ nhiều —</p>
-  </div>
+  <h1>Chúc Mẹ 20-10 vui vẻ, hạnh phúc<br>và mãi mãi xinh đẹp! 💐</h1>
+  <p>— Con thương Mẹ nhiều —</p>
 </div>
-<div class="float-hearts" id="float"></div>
-
-<!-- Nhạc: để file music.mp3 cạnh index.html (hoặc sửa src thành link khác) -->
-<audio id="bgm" preload="auto" src="music.mp3" loop></audio>
-
+<audio id="bgm" src="music.mp3" preload="auto" loop></audio>
 <script>
-/* ===== tiny floating hearts (không nút, tự chạy) ===== */
-(function(){
-  const wrap = document.getElementById('float');
-  const W=()=>innerWidth, H=()=>innerHeight;
-  const COLORS=['#ff6fb5','#ffd166','#68d391','#7aa2ff','#ffc6ff'];
-  function spawn(){
-    const el=document.createElement('div');
-    el.className='h';
-    const size=10+Math.random()*16;
-    el.style.width=el.style.height=size+'px';
-    el.style.left=Math.random()*W()+'px';
-    el.style.bottom='-20px';
-    el.style.opacity=.25+Math.random()*.25;
-    el.style.filter='blur('+(Math.random()*0.8)+'px)';
-    el.style.setProperty('--accent', COLORS[(Math.random()*COLORS.length)|0]);
-    wrap.appendChild(el);
-    const dur=8+Math.random()*10;
-    const drift=(Math.random()<.5?-1:1)*(20+Math.random()*80);
-    el.animate([{transform:'translate(0,0) rotate(45deg)'},{transform:`translate(${drift}px,-${H()+60}px) rotate(45deg)`}],{duration:dur*1000,easing:'linear'})
-      .onfinish=()=>el.remove();
-  }
-  setInterval(spawn,600);
-})();
-
-/* ===== fireworks: big heart-shaped bursts, infinite loop ===== */
-const canvas=document.getElementById('fw'), ctx=canvas.getContext('2d');
-let DPR=Math.max(1,Math.min(2,devicePixelRatio||1));
-function resize(){canvas.width=Math.floor(innerWidth*DPR);canvas.height=Math.floor(innerHeight*DPR)}
-addEventListener('resize',resize,{passive:true}); resize();
+/* ==== Hiệu ứng pháo hoa nâng cấp (trái tim & đuôi sáng) ==== */
+const canvas=document.getElementById("fireworks"),ctx=canvas.getContext("2d");
+let w,h;function resize(){w=canvas.width=innerWidth*devicePixelRatio;h=canvas.height=innerHeight*devicePixelRatio;ctx.scale(devicePixelRatio,devicePixelRatio)}
+resize();addEventListener("resize",resize);
 
 class Particle{
-  constructor(x,y,vx,vy,color,size){this.x=x;this.y=y;this.vx=vx;this.vy=vy;this.alpha=1;this.life=0;this.color=color;this.size=size}
-  step(dt){this.vy+=220*dt; this.vx*=0.995; this.vy*=0.995; this.x+=this.vx*dt; this.y+=this.vy*dt; this.life+=dt; this.alpha=Math.max(0,1-this.life/2.4)}
-  draw(){ctx.globalAlpha=this.alpha; ctx.fillStyle=this.color; ctx.beginPath(); ctx.arc(this.x,this.y,this.size,0,6.283); ctx.fill()}
+  constructor(x,y,vx,vy,color,size){
+    this.x=x;this.y=y;this.vx=vx;this.vy=vy;
+    this.color=color;this.life=1;this.size=size;
+    this.trail=[];this.maxTrail=8;
+  }
+  update(dt){
+    this.trail.push({x:this.x,y:this.y,life:this.life});
+    if(this.trail.length>this.maxTrail)this.trail.shift();
+    this.vy+=300*dt;
+    this.x+=this.vx*dt;this.y+=this.vy*dt;
+    this.life-=dt*0.4;
+  }
+  draw(ctx){
+    const grad=ctx.createRadialGradient(this.x,this.y,0,this.x,this.y,this.size*3);
+    grad.addColorStop(0,this.color);grad.addColorStop(1,"transparent");
+    ctx.fillStyle=grad;
+    ctx.beginPath();ctx.arc(this.x,this.y,this.size,0,2*Math.PI);ctx.fill();
+    // đuôi sáng
+    for(let i=0;i<this.trail.length;i++){
+      const t=this.trail[i];
+      ctx.globalAlpha=t.life*this.life*0.6;
+      ctx.fillRect(t.x-1,t.y-1,2,2);
+    }
+    ctx.globalAlpha=1;
+  }
 }
-const COLORS=['#ff6fb5','#ffd166','#7aa2ff','#b5f5ec','#fff176','#f78fb3','#c8b6ff'];
-let particles=[];
-let last=performance.now();
-let timer=0;
-const baseInterval=1.0; // nhịp bắn
 
-function heartPoint(t){
+function heartShape(t){
   const x=16*Math.sin(t)**3;
   const y=13*Math.cos(t)-5*Math.cos(2*t)-2*Math.cos(3*t)-Math.cos(4*t);
-  return {x:x/18,y:-y/18}; // chuẩn hoá, đảo trục y cho màn hình
+  return {x:x/18,y:-y/18};
 }
+
+let particles=[];
+let last=performance.now(),timer=0;
+const colors=["#ff6fb5","#ffb6c1","#ffd166","#cba6f7","#ffffff"];
 function spawnHeart(){
-  const w=canvas.width,h=canvas.height;
-  const cx=(0.2+Math.random()*0.6)*w;
-  const cy=(0.28+Math.random()*0.38)*h;
-  const color=COLORS[(Math.random()*COLORS.length)|0];
-  const N=260; // nhiều hạt -> trái tim to, dày
-  const speed=500+Math.random()*160;
-  const size=2.5+Math.random()*1.6;
-  for(let i=0;i<N;i++){
-    const t=(i/N)*Math.PI*2;
-    const p=heartPoint(t);
-    const jitter=0.85+Math.random()*0.35;
-    const vx=p.x*speed*jitter, vy=p.y*speed*jitter;
-    particles.push(new Particle(cx,cy,vx,vy,color,size));
+  const cx=Math.random()*innerWidth*0.8+innerWidth*0.1;
+  const cy=Math.random()*innerHeight*0.4+innerHeight*0.2;
+  const color=colors[Math.floor(Math.random()*colors.length)];
+  const n=300,spd=400+Math.random()*200;
+  for(let i=0;i<n;i++){
+    const t=(i/n)*Math.PI*2;
+    const p=heartShape(t);
+    const vx=p.x*spd*(0.8+Math.random()*0.4);
+    const vy=p.y*spd*(0.8+Math.random()*0.4);
+    particles.push(new Particle(cx,cy,vx,vy,color,2+Math.random()*1.5));
   }
-  particles.push(new Particle(cx,cy,0,0,'#ffffff',8)); // flash lõi
 }
-function loop(now){
-  const dt=(now-last)/1000; last=now;
-  ctx.globalCompositeOperation='destination-out';
-  ctx.fillStyle=`rgba(0,0,0,${Math.min(1,dt*1.3)})`;
-  ctx.fillRect(0,0,canvas.width,canvas.height);
-  ctx.globalCompositeOperation='lighter';
-
-  timer-=dt; if(timer<=0){ spawnHeart(); timer=baseInterval; }
-
+function animate(now){
+  const dt=(now-last)/1000;last=now;
+  ctx.globalCompositeOperation="destination-out";
+  ctx.fillStyle="rgba(0,0,0,0.2)";
+  ctx.fillRect(0,0,innerWidth,innerHeight);
+  ctx.globalCompositeOperation="lighter";
+  timer-=dt;
+  if(timer<=0){spawnHeart();timer=1.2;}
   for(let i=particles.length-1;i>=0;i--){
-    const p=particles[i]; p.step(dt);
-    if(p.alpha<=0) particles.splice(i,1); else p.draw();
+    const p=particles[i];
+    p.update(dt);
+    if(p.life<=0)particles.splice(i,1);
+    else p.draw(ctx);
   }
-  requestAnimationFrame(loop);
+  requestAnimationFrame(animate);
 }
-requestAnimationFrame(loop);
+requestAnimationFrame(animate);
 
-/* ===== audio: không nút; tự phát nếu được, nếu không thì bật khi người dùng chạm lần đầu ===== */
-const audio=document.getElementById('bgm');
-(async()=>{ try{ await audio.play(); }catch{ /* chờ user tương tác */ } })();
-function kickAudio(){ audio.play().catch(()=>{}); window.removeEventListener('pointerdown',kickAudio); window.removeEventListener('keydown',kickAudio) }
-window.addEventListener('pointerdown',kickAudio,{once:true,passive:true});
-window.addEventListener('keydown',kickAudio,{once:true});
+/* ===== Nhạc: auto play hoặc khi chạm ===== */
+const bgm=document.getElementById("bgm");
+(async()=>{try{await bgm.play();}catch{}})();
+window.addEventListener("pointerdown",()=>bgm.play().catch(()=>{}),{once:true});
 </script>
 </body>
 </html>
