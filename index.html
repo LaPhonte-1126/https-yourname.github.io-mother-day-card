@@ -1,135 +1,191 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-<meta charset="UTF-8">
-<title>💖 Chúc mừng 20/10 Mẹ yêu 💖</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>💖 Thiệp 20/10 tặng Mẹ 💖</title>
 <style>
-  html, body {
-    height: 100%;
-    margin: 0;
-    overflow: hidden;
-    background: radial-gradient(circle at bottom, #ffe6f2 0%, #fff 100%);
-    font-family: 'Segoe UI', sans-serif;
+  :root{ --pink:#d81b60; --bg1:#fff; --bg2:#ffe6f2; }
+  html,body{height:100%;margin:0;overflow:hidden;font-family:system-ui,-apple-system,"Segoe UI",Roboto}
+  body{background:radial-gradient(circle at 50% 100%,var(--bg2),var(--bg1))}
+  canvas{position:fixed;inset:0;display:block}
+
+  /* nội dung */
+  .container{position:relative;z-index:10;text-align:center;padding:clamp(40px,8vh,100px) 16px 0;color:var(--pink)}
+  h1{font-size:clamp(28px,6vw,52px);margin:.2em 0;animation:glow 2s ease-in-out infinite alternate}
+  p{font-size:clamp(16px,3.6vw,22px);color:#333;margin:.35em 0}
+  @keyframes glow{from{text-shadow:0 0 8px #ff9acb} to{ text-shadow:0 0 22px #ff2d7a}}
+
+  /* tim bay */
+  .heart{position:fixed;bottom:-40px;left:50%;translate:-50% 0;pointer-events:none;z-index:9;
+         color:#ff66b2;font-size:20px;animation:floatUp 6s linear forwards}
+  @keyframes floatUp{0%{transform:translateY(0) scale(1);opacity:1}100%{transform:translateY(-110vh) scale(.4);opacity:0}}
+
+  /* cánh hoa rơi */
+  .petal{position:fixed;top:-10vh;left:0;pointer-events:none;z-index:8;width:18px;height:18px;
+         background:radial-gradient(circle at 30% 30%,#fff0 8px,#ffb6d1 9px,#ff7fb1 70%,#ff4f99);
+         border-radius:50% 50% 50% 0;transform:rotate(45deg);opacity:.9;
+         animation:fall var(--dur) linear forwards, sway 3s ease-in-out infinite}
+  @keyframes fall{to{transform:translateY(115vh) rotate(405deg)}}
+  @keyframes sway{50%{translate:10px 0}}
+
+  /* audio & controls */
+  .controls{position:fixed;left:50%;bottom:14px;translate:-50% 0;z-index:15;display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:center}
+  .btn{background:var(--pink);color:#fff;border:0;border-radius:999px;padding:9px 16px;font-size:14px;cursor:pointer;box-shadow:0 6px 14px #d81b6033}
+
+  /* QR khung trái tim */
+  .qr-wrap{position:fixed;right:16px;bottom:80px;z-index:12;display:flex;flex-direction:column;align-items:center;gap:8px}
+  .heart-frame{
+    position:relative; width:220px; height:200px;
+    filter: drop-shadow(0 8px 18px #d81b6040);
   }
-  .container {
-    position: relative;
-    z-index: 10;
-    text-align: center;
-    padding-top: 100px;
-    color: #d81b60;
+  /* tạo hình trái tim bằng CSS */
+  .heart-shape{
+    position:absolute; inset:0; transform:translateY(-14px);
   }
-  h1 {
-    font-size: 48px;
-    animation: glow 2s infinite alternate;
+  .heart-shape:before, .heart-shape:after{
+    content:""; position:absolute; width:120px; height:190px; border-radius:120px 120px 0 120px;
+    background:linear-gradient(145deg,#ff8bbd,#ff2d7a);
   }
-  p {
-    font-size: 22px;
-    color: #333;
-    margin: 10px;
+  .heart-shape:before{left:42px; transform:rotate(-45deg); transform-origin:bottom right;}
+  .heart-shape:after {left:58px; transform:rotate(45deg);  transform-origin:bottom left;}
+
+  .qr-box{
+    position:absolute; left:50%; top:52%;
+    width:150px; height:150px; translate:-50% -50%;
+    background:#fff; padding:10px; border-radius:16px;
+    display:grid; place-items:center;
   }
-  @keyframes glow {
-    from { text-shadow: 0 0 10px #ff99cc; }
-    to { text-shadow: 0 0 25px #ff1a75; }
-  }
-  .heart {
-    position: absolute;
-    color: #ff66b2;
-    animation: floatUp 5s linear infinite;
-  }
-  @keyframes floatUp {
-    0% { transform: translateY(0) scale(1); opacity: 1; }
-    100% { transform: translateY(-800px) scale(0.3); opacity: 0; }
-  }
-  canvas {
-    position: absolute;
-    top: 0; left: 0;
-  }
-  audio {
-    position: fixed;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-  }
+  .qr-box img{width:100%;height:100%;object-fit:contain}
+  .caption{font-size:12px;color:#555}
 </style>
 </head>
 <body>
-<canvas id="fireworks"></canvas>
+<canvas id="fw"></canvas>
 
 <div class="container">
-  <h1>🌸 Chúc Mừng Ngày 20/10 Mẹ Yêu 🌸</h1>
-  <p>Mẹ ơi, con chúc mẹ thật nhiều sức khỏe, luôn xinh đẹp<br>
-  và hạnh phúc tràn đầy bên gia đình 💕</p>
-  <p><em>Con yêu mẹ nhiều lắm ❤️</em></p>
+  <h1>🌸 Chúc mừng Ngày 20/10, Mẹ yêu! 🌸</h1>
+  <p>Chúc mẹ 20-10 vui vẻ, hạnh phúc và mãi mãi xinh đẹp.</p>
+  <p><em>Con yêu mẹ rất nhiều 💕</em></p>
 </div>
 
-<audio autoplay loop controls>
-  <source src="https://www.bensound.com/bensound-music/bensound-romantic.mp3" type="audio/mpeg">
-</audio>
+<!-- QR khung trái tim: tự động mã hóa đúng URL trang hiện tại -->
+<div class="qr-wrap">
+  <div class="heart-frame" id="qrFrame">
+    <div class="heart-shape" aria-hidden="true"></div>
+    <div class="qr-box"><img id="qrImg" alt="QR code"/></div>
+  </div>
+  <button class="btn" id="dlQR">⬇️ Tải mã QR</button>
+  <div class="caption">Quét để mở thiệp</div>
+</div>
+
+<div class="controls">
+  <audio id="music" preload="auto" loop>
+    <source src="https://www.bensound.com/bensound-music/bensound-romantic.mp3" type="audio/mpeg" />
+  </audio>
+  <button class="btn" id="playBtn">🎵 Bật nhạc</button>
+  <button class="btn" id="boomBtn">🎆 Bắn pháo hoa</button>
+</div>
 
 <script>
-// 💥 HIỆU ỨNG PHÁO HOA 💥
-const canvas = document.getElementById('fireworks');
-const ctx = canvas.getContext('2d');
-canvas.width = innerWidth;
-canvas.height = innerHeight;
+/* ====== FIT CANVAS ====== */
+const fw = document.getElementById('fw'), fctx = fw.getContext('2d');
+function fit(){ fw.width = innerWidth; fw.height = innerHeight }
+addEventListener('resize', fit, {passive:true}); fit();
 
-let fireworks = [];
-class Firework {
-  constructor(x, y, color) {
-    this.x = x; this.y = y;
-    this.color = color;
-    this.particles = [];
-    for (let i = 0; i < 50; i++) {
-      this.particles.push({
-        x: x, y: y,
-        angle: Math.random() * 2 * Math.PI,
-        speed: Math.random() * 4 + 1,
-        alpha: 1
-      });
-    }
-  }
-  update() {
-    this.particles.forEach(p => {
-      p.x += Math.cos(p.angle) * p.speed;
-      p.y += Math.sin(p.angle) * p.speed;
-      p.alpha -= 0.02;
-    });
-    this.particles = this.particles.filter(p => p.alpha > 0);
-  }
-  draw() {
-    this.particles.forEach(p => {
-      ctx.fillStyle = `rgba(${this.color},${p.alpha})`;
-      ctx.fillRect(p.x, p.y, 2, 2);
-    });
-  }
+/* ====== FIREWORKS ====== */
+let fireworks=[];
+class Firework{
+  constructor(x,y,rgba){this.parts=[];for(let i=0;i<60;i++){this.parts.push({x,y,ang:Math.random()*6.283,spd:Math.random()*4+1.2,alp:1,grav:.03})}this.col=rgba}
+  upd(){this.parts.forEach(p=>{p.x+=Math.cos(p.ang)*p.spd;p.y+=Math.sin(p.ang)*p.spd+p.grav;p.spd*=0.98;p.alp-=0.02});this.parts=this.parts.filter(p=>p.alp>0)}
+  draw(){this.parts.forEach(p=>{fctx.fillStyle=`rgba(${this.col},${p.alp})`;fctx.fillRect(p.x,p.y,2,2)})}
 }
-function loop() {
-  ctx.fillStyle = "rgba(255,255,255,0.1)";
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-  fireworks.forEach(fw => { fw.update(); fw.draw(); });
-  fireworks = fireworks.filter(fw => fw.particles.length > 0);
+function boom(x = Math.random()*fw.width, y = Math.random()*fw.height*0.5){
+  const c=`${~~(Math.random()*255)},${~~(80+Math.random()*120)},${~~(150+Math.random()*105)}`;
+  fireworks.push(new Firework(x,y,c));
+}
+setInterval(()=>boom(),750);
+function loop(){
+  fctx.fillStyle='rgba(255,255,255,0.12)'; fctx.fillRect(0,0,fw.width,fw.height);
+  fireworks.forEach(f=>{f.upd();f.draw()}); fireworks=fireworks.filter(f=>f.parts.length);
   requestAnimationFrame(loop);
-}
-setInterval(() => {
-  const x = Math.random() * canvas.width;
-  const y = Math.random() * canvas.height / 2;
-  const color = `${Math.floor(Math.random()*255)},${Math.floor(Math.random()*100)},${Math.floor(Math.random()*255)}`;
-  fireworks.push(new Firework(x, y, color));
-}, 600);
-loop();
+} loop();
+fw.addEventListener('click', e=>boom(e.clientX,e.clientY), {passive:true});
+document.getElementById('boomBtn').onclick=()=>boom(innerWidth*.5,innerHeight*.35);
 
-// 💕 TRÁI TIM BAY 💕
-function createHeart() {
-  const heart = document.createElement("div");
-  heart.classList.add("heart");
-  heart.textContent = "💖";
-  heart.style.left = Math.random() * 100 + "vw";
-  heart.style.fontSize = Math.random() * 24 + 16 + "px";
-  heart.style.animationDuration = 3 + Math.random() * 4 + "s";
-  document.body.appendChild(heart);
-  setTimeout(() => heart.remove(), 5000);
+/* ====== HEARTS & PETALS ====== */
+function heart(){const h=document.createElement('div');h.className='heart';h.textContent='💖';
+  h.style.left=Math.random()*100+'vw';h.style.fontSize=(16+Math.random()*28)+'px';
+  h.style.animationDuration=(4+Math.random()*5)+'s';document.body.appendChild(h);setTimeout(()=>h.remove(),9e3)}
+setInterval(heart,480);
+function petal(){const el=document.createElement('div');el.className='petal';el.style.left=Math.random()*100+'vw';
+  el.style.animationDuration=(4+Math.random()*6)+'s';el.style.setProperty('--dur',(6+Math.random()*8)+'s');
+  document.body.appendChild(el);const life=parseFloat(getComputedStyle(el).getPropertyValue('--dur'))*1000+1000;setTimeout(()=>el.remove(),life)}
+setInterval(petal,260);
+
+/* ====== AUDIO ====== */
+const music=document.getElementById('music'), btn=document.getElementById('playBtn');
+async function tryPlay(){try{await music.play();btn.textContent='⏸️ Tắt nhạc'}catch{btn.textContent='🎵 Bật nhạc'}}
+tryPlay();
+btn.onclick=async()=>{ if(music.paused){await music.play();btn.textContent='⏸️ Tắt nhạc'} else {music.pause();btn.textContent='🎵 Bật nhạc'} };
+
+/* ====== QR KHUNG TRÁI TIM ======
+   Dùng dịch vụ tạo ảnh QR (qrserver.com). Ảnh QR nằm trong hộp vuông,
+   bên ngoài là khung trái tim để vẫn quét tốt. */
+const qrImg = document.getElementById('qrImg');
+function setQR(){
+  const url = location.href; // chính URL trang hiện tại
+  const api = 'https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=' + encodeURIComponent(url);
+  qrImg.crossOrigin = 'anonymous';
+  qrImg.src = api;
 }
-setInterval(createHeart, 500);
+setQR();
+
+/* Tải QR (ghép khung tim + QR thành PNG) */
+document.getElementById('dlQR').onclick = async ()=>{
+  const frame = document.getElementById('qrFrame');
+  // Vẽ lại khung + QR lên canvas để tải
+  const w = 660, h = 600; // tỉ lệ lớn hơn cho sắc nét
+  const c = document.createElement('canvas'); c.width=w; c.height=h; const ctx = c.getContext('2d');
+
+  // nền trong suốt
+  ctx.clearRect(0,0,w,h);
+
+  // vẽ trái tim (hai “lá”)
+  function heartPath(ctx){
+    ctx.save();
+    const grad = ctx.createLinearGradient(0,0,w,h);
+    grad.addColorStop(0,'#ff8bbd'); grad.addColorStop(1,'#ff2d7a');
+    ctx.fillStyle = grad;
+
+    // trái tim kiểu cơ bản
+    ctx.translate(w/2, h/2-40);
+    const r = 170;
+    ctx.beginPath();
+    ctx.moveTo(0, r);
+    ctx.bezierCurveTo(200, r-140,  r, -20,   0, -40);
+    ctx.bezierCurveTo(-r, -20,  -200, r-140,  0, r);
+    ctx.closePath();
+    ctx.fill();
+    ctx.restore();
+  }
+  heartPath(ctx);
+
+  // vẽ hộp QR trắng
+  const box = {x:w/2-190/2, y:h/2-190/2+10, s:190};
+  ctx.fillStyle = '#fff'; ctx.roundRect ? ctx.roundRect(box.x-16,box.y-16,box.s+32,box.s+32,20) : ctx.fillRect(box.x-16,box.y-16,box.s+32,box.s+32);
+  ctx.fill();
+
+  // vẽ ảnh QR lên hộp
+  await qrImg.decode?.().catch(()=>{});
+  ctx.drawImage(qrImg, box.x, box.y, box.s, box.s);
+
+  // tải
+  const a=document.createElement('a');
+  a.download='QR_2010_me_yeu.png';
+  a.href=c.toDataURL('image/png');
+  a.click();
+};
 </script>
 </body>
 </html>
