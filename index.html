@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Chúc Mẹ 20-10 💖</title>
+<title>Chúc Mẹ 20-10 💗</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Inter:wght@300;600&display=swap" rel="stylesheet">
@@ -12,9 +12,9 @@
   html,body{height:100%;overflow:hidden}
   body{
     font-family:'Inter',sans-serif;
-    background: radial-gradient(circle at 20% 20%, #ffb3ec, #ff9fda 25%, #b28bff 60%, #2e005e 100%);
+    background: radial-gradient(circle at 30% 30%, #ffe6f0, #ffd9ec 40%, #fff1f7 80%);
     background-attachment:fixed;
-    color:white;
+    color:#ff2e83;
   }
   canvas{position:fixed;inset:0;width:100%;height:100%}
   .hero{
@@ -22,16 +22,17 @@
     display:flex;flex-direction:column;
     align-items:center;justify-content:center;
     text-align:center;
-    text-shadow:0 0 20px rgba(255,255,255,0.8);
+    text-shadow:0 0 15px rgba(255,130,180,0.5);
     z-index:5;
   }
   h1{
     font-family:'Great Vibes',cursive;
     font-size:clamp(40px,8vw,100px);
-    color:#fff;
+    color:#ff2e83;
   }
   p{
     font-size:clamp(16px,2vw,26px);
+    color:#ff4f94;
     margin-top:10px;
   }
 </style>
@@ -39,12 +40,12 @@
 <body>
 <canvas id="fireworks"></canvas>
 <div class="hero">
-  <h1>Chúc Mẹ 20-10 vui vẻ, hạnh phúc<br>và mãi mãi xinh đẹp! 💐</h1>
+  <h1>Chúc Mẹ 20-10<br>vui vẻ, hạnh phúc<br>và mãi mãi xinh đẹp! 💐</h1>
   <p>— Con thương Mẹ nhiều —</p>
 </div>
 <audio id="bgm" src="music.mp3" preload="auto" loop></audio>
 <script>
-/* ==== Hiệu ứng pháo hoa nâng cấp (trái tim & đuôi sáng) ==== */
+/* ==== Pháo hoa trái tim rực rỡ (có đuôi sáng) ==== */
 const canvas=document.getElementById("fireworks"),ctx=canvas.getContext("2d");
 let w,h;function resize(){w=canvas.width=innerWidth*devicePixelRatio;h=canvas.height=innerHeight*devicePixelRatio;ctx.scale(devicePixelRatio,devicePixelRatio)}
 resize();addEventListener("resize",resize);
@@ -58,7 +59,7 @@ class Particle{
   update(dt){
     this.trail.push({x:this.x,y:this.y,life:this.life});
     if(this.trail.length>this.maxTrail)this.trail.shift();
-    this.vy+=300*dt;
+    this.vy+=280*dt;
     this.x+=this.vx*dt;this.y+=this.vy*dt;
     this.life-=dt*0.4;
   }
@@ -70,7 +71,8 @@ class Particle{
     // đuôi sáng
     for(let i=0;i<this.trail.length;i++){
       const t=this.trail[i];
-      ctx.globalAlpha=t.life*this.life*0.6;
+      ctx.globalAlpha=t.life*this.life*0.5;
+      ctx.fillStyle=this.color;
       ctx.fillRect(t.x-1,t.y-1,2,2);
     }
     ctx.globalAlpha=1;
@@ -85,7 +87,7 @@ function heartShape(t){
 
 let particles=[];
 let last=performance.now(),timer=0;
-const colors=["#ff6fb5","#ffb6c1","#ffd166","#cba6f7","#ffffff"];
+const colors=["#ff4081","#ff99cc","#ff66b3","#ff80bf","#fff"];
 function spawnHeart(){
   const cx=Math.random()*innerWidth*0.8+innerWidth*0.1;
   const cy=Math.random()*innerHeight*0.4+innerHeight*0.2;
@@ -102,7 +104,7 @@ function spawnHeart(){
 function animate(now){
   const dt=(now-last)/1000;last=now;
   ctx.globalCompositeOperation="destination-out";
-  ctx.fillStyle="rgba(0,0,0,0.2)";
+  ctx.fillStyle="rgba(255,240,245,0.25)";
   ctx.fillRect(0,0,innerWidth,innerHeight);
   ctx.globalCompositeOperation="lighter";
   timer-=dt;
